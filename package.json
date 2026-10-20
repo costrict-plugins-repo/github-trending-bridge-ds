@@ -1,0 +1,99 @@
+{
+  "name": "@noemuch/bridge-ds",
+  "version": "7.3.1",
+  "description": "Compiler-driven design generation in Figma — 100% design system compliant. Compiles component specs into verified Figma output via MCP.",
+  "main": "dist/lib/cli/main.js",
+  "types": "dist/lib/cli/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/lib/cli/main.js",
+      "types": "./dist/lib/cli/main.d.ts"
+    },
+    "./compiler": {
+      "import": "./dist/lib/compiler/compile.js",
+      "types": "./dist/lib/compiler/compile.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "bridge-ds": "./bin/bridge.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "skills/",
+    "hooks/",
+    "references/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md",
+    ".claude-plugin/",
+    ".cursor-plugin/",
+    ".mcp.json",
+    "CLAUDE.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:deps": "npm run build --workspaces --if-present",
+    "prebuild": "npm run build:deps",
+    "build": "tsc && node scripts/copy-builtin-resources.js",
+    "build:watch": "tsc --watch",
+    "pretypecheck": "npm run build:deps",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"lib/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"lib/**/*.ts\" \"test/**/*.ts\" \"*.{json,md}\"",
+    "format:check": "prettier --check \"lib/**/*.ts\" \"test/**/*.ts\" \"*.{json,md}\"",
+    "test": "npm run test:all",
+    "test:smoke": "node bin/bridge.js help",
+    "test:skills": "node scripts/validate-skills.js",
+    "test:all": "npm run build && node --test $(find dist/lib dist/test -name '*.test.js')",
+    "test:security": "npm run build && node --test dist/test/security/*.test.js",
+    "test:rules-fixtures": "npm run build && node --test dist/lib/lint/builtin.test.js",
+    "test:rules-meta": "node scripts/validate-rule-meta.js",
+    "version:sync": "node scripts/bump-version.js",
+    "prepublishOnly": "npm run typecheck && npm run build && npm run lint && npm run test:skills && npm run test:security"
+  },
+  "keywords": [
+    "claude-code",
+    "figma",
+    "design-system",
+    "mcp",
+    "design-tokens",
+    "ai-design",
+    "figma-plugin-api",
+    "claude-code-plugin",
+    "cursor-plugin"
+  ],
+  "author": "noemuch",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noemuch/bridge.git"
+  },
+  "homepage": "https://github.com/noemuch/bridge",
+  "dependencies": {
+    "@stoplight/spectral-core": "^1.22.0",
+    "@stoplight/spectral-functions": "^1.10.2",
+    "@stoplight/spectral-rulesets": "^1.22.1",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.1.0",
+    "picocolors": "^1.0.1",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.12.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
+    "eslint": "^10.2.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.5.0"
+  }
+}

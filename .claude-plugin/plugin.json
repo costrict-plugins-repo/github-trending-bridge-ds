@@ -1,0 +1,24 @@
+{
+  "name": "bridge-ds",
+  "version": "7.3.1",
+  "description": "Compiler-driven design generation in Figma — 100% design system compliant. Compiles component specs into verified Figma output via MCP.",
+  "author": {
+    "name": "noemuch",
+    "url": "https://github.com/noemuch"
+  },
+  "homepage": "https://github.com/noemuch/bridge",
+  "repository": "https://github.com/noemuch/bridge",
+  "license": "MIT",
+  "keywords": [
+    "figma",
+    "design-system",
+    "design-tokens",
+    "mcp",
+    "ai-design",
+    "figma-plugin-api",
+    "spec-first",
+    "design-generation"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

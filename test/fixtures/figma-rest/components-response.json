@@ -1,0 +1,24 @@
+{
+  "status": 200,
+  "error": false,
+  "meta": {
+    "components": [
+      {
+        "key": "COMPKEY_BTN_PRIMARY",
+        "file_key": "FILEKEY",
+        "node_id": "1:101",
+        "name": "variant=primary, size=medium",
+        "description": "",
+        "containing_frame": { "pageName": "Actions" }
+      },
+      {
+        "key": "COMPKEY_DIVIDER",
+        "file_key": "FILEKEY",
+        "node_id": "1:200",
+        "name": "Divider",
+        "description": "Horizontal rule.",
+        "containing_frame": { "pageName": "Layout" }
+      }
+    ]
+  }
+}

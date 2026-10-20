@@ -1,0 +1,7 @@
+dsName: "Spectra"
+tagline: "Finary's design system."
+figmaFileKey: "FILEKEY123"
+kbPath: "bridge-ds"
+cron:
+  cadence: "daily"
+  time: "06:00"

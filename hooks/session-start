@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Bridge SessionStart hook. Injects skills/using-bridge/SKILL.md into the
+# LLM system prompt at session start and appends a one-line health summary.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_FILE="$SCRIPT_DIR/../skills/using-bridge/SKILL.md"
+
+if [ ! -f "$SKILL_FILE" ]; then
+  printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":""}}\n'
+  exit 0
+fi
+
+SKILL_BODY="$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$SKILL_FILE")"
+
+HEALTH=""
+if [ -f "docs.config.yaml" ]; then
+  KB_FILE="bridge-ds/knowledge-base/registries/components.json"
+  if [ -f "$KB_FILE" ]; then
+    COMP_COUNT="$(python3 -c "
+import json, sys
+try:
+    with open('$KB_FILE') as f:
+        print(len(json.load(f).get('components', [])))
+except Exception:
+    print('?')
+" 2>/dev/null || echo "?")"
+    HEALTH="◆ Bridge: KB ready · $COMP_COUNT components"
+  else
+    HEALTH="◆ Bridge: scaffolded but not yet extracted · run \"setup bridge\""
+  fi
+else
+  HEALTH="◆ Bridge: not set up yet · run \"setup bridge\" to initialize"
+fi
+
+COMBINED="$SKILL_BODY"
+if [ -n "$HEALTH" ]; then
+  COMBINED="$COMBINED
+
+---
+
+$HEALTH"
+fi
+
+printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":%s}}\n' \
+  "$(printf '%s' "$COMBINED" | python3 -c "import json,sys; print(json.dumps(sys.stdin.read()))")"
